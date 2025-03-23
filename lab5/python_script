@@ -1,0 +1,4 @@
+import json 
+
+with open('./DS2002-json-practice/data/schacon.repos.json', 'r') as file:
+    data = json.load(file)

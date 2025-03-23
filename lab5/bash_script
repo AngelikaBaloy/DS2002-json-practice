@@ -1,0 +1,15 @@
+#!/Users/angelikabaloy/DS2002-json-practice/lab5
+
+# fetch data 
+curl -s "https://aviationweather.gov/api/data/metar?ids=KMCI&format=json&taf=false&hours=12&bbox=40%2C-90%2C45%2C-85" > aviation.json
+
+# first six receiptTime values
+jq -r '.[0:6] | .[].receiptTime' aviation.json 
+
+# average temperature from last twelve hours  
+jq -r '.[0:12] | .[].temp' aviation.json
+
+# cloud value 
+jq -r '.[0:12] | .[].clouds[].cover' aviation.json
+
+# complete script
