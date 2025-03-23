@@ -7,9 +7,32 @@ curl -s "https://aviationweather.gov/api/data/metar?ids=KMCI&format=json&taf=fal
 jq -r '.[0:6] | .[].receiptTime' aviation.json 
 
 # average temperature from last twelve hours  
-jq -r '.[0:12] | .[].temp' aviation.json
+temps=$(jq -r '.[0:12] | .[].temp' aviation.json) 
+
+sum=0
+
+while IFS= read -r temp; do 
+    sum=$(echo "$sum + $temp" | bc -l )
+done <<< "$temps"
+ 
+avg_temp=$(echo "scale=2; $sum / 12"| bc -l)
+echo "Average Temperature: $avg_temp" 
 
 # cloud value 
-jq -r '.[0:12] | .[].clouds[].cover' aviation.json
+clouds=$(jq -r '.[0:12] | .[].clouds[].cover' aviation.json)
 
-# complete script
+clear=0
+
+for cloud in $clouds; do 
+    if [ "$cloud" = "CLR" ]; then 
+        clear=$((clear + 1))
+    fi
+done 
+
+if [ "$clear" -ge 6 ]; then 
+    echo "Mostly Cloudy: false" 
+else 
+    echo "Mostly Cloudy: true" 
+fi
+
+
