@@ -18,7 +18,7 @@ done <<< "$temps"
 avg_temp=$(echo "scale=2; $sum / 12"| bc -l)
 echo "Average Temperature: $avg_temp" 
 
-# cloud value 
+# cloud value from last twelve hours
 clouds=$(jq -r '.[0:12] | .[].clouds[].cover' aviation.json)
 
 clear=0
